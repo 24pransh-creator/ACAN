@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title>Shree Restaurant</title>
+		<link rel="stylesheet" type="text/css" href="Style.css">
+		<link rel="stylesheet" href="bootstrap/bootstrap.min.css" type="text/css">
+		<script src="bootstrap/jquery-3.4.1.min.js"></script>
+		<script src="bootstrap/bootstrap.min.js"></script>
+	</head>
+<body>
+<?php include "Header.php"; ?>
+<?php
+$connect=mysqli_connect("localhost","root","","shree_r");
+$query="select * from admin_home";
+$result=mysqli_query($connect,$query);
+?>
+
+<div class="container ">
+	<div id="carouselExampleIndicators" style="margin: 0 auto;"  class="carousel slide w-75" data-ride="carousel">
+		<div class="carousel-inner">
+	   		<div class="carousel-item active">
+	    		<img class="d-block w-100 slider" src="image/img3.jpg"  alt="First slide">
+	      		<div class="carousel-caption">
+		    		<h1 class="wel">Welcome to Shree Restaurant</h1>
+		  		</div>
+	    	</div>
+		    <?php 
+		    while($row=mysqli_fetch_array($result))
+		    {
+		    ?>
+			    <div class="carousel-item">
+			    	<img class="d-block w-100 slider" src="admin/img/<?php echo $row['image']; ?>" alt="Second slide">
+			    </div>
+		<?php }
+	?>
+		</div>
+	</div>
+</div><br>
+<?php include"Footer.php"; ?>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
+
+    

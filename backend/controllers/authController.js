@@ -2,10 +2,20 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// Admin Signup
+// ================= SIGNUP =================
+
 const signup = async (req, res) => {
   try {
-    const { fullName, email, password, role } = req.body;
+    const {
+      fullName,
+      email,
+      password,
+      role,
+      employeeId,
+      mobile,
+      trainNumber,
+      zoneDivision,
+    } = req.body;
 
     const userExists = await User.findOne({ email });
 
@@ -23,6 +33,10 @@ const signup = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      employeeId,
+      mobile,
+      trainNumber,
+      zoneDivision,
     });
 
     res.status(201).json({
@@ -39,13 +53,16 @@ const signup = async (req, res) => {
   }
 };
 
-// Login
+// ================= LOGIN =================
+
 const login = async (req, res) => {
   try {
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -88,7 +105,96 @@ const login = async (req, res) => {
   }
 };
 
+// ==========================
+// GET ALL USERS
+// ==========================
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ==========================
+// UPDATE USER
+// ==========================
+const updateUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ==========================
+// DELETE USER
+// ==========================
+const deleteUser = async (req, res) => {
+  try {
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+
+    res.json({
+      success: true,
+      message: "User deleted successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ================= EXPORT =================
+
 module.exports = {
   signup,
   login,
+  getUsers,
+  updateUser,
+  deleteUser,
 };

@@ -20,19 +20,35 @@ function Login() {
         password,
       });
 
+      // Save Login
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      if (res.data.user.role === "superadmin") {
-        navigate("/super-admin");
-      } else if (res.data.user.role === "railway") {
-        navigate("/");
-      } else if (res.data.user.role === "forest") {
-        navigate("/");
-      } else {
-        navigate("/");
-      }
+      // Redirect according to role
+      switch (res.data.user.role) {
+        case "superadmin":
+          navigate("/super-admin");
+          break;
 
+        case "train_driver":
+          navigate("/driver");
+          break;
+
+        case "railway":
+          navigate("/driver");
+          break;
+
+        case "forest":
+          navigate("/driver");
+          break;
+
+        case "viewer":
+          navigate("/driver");
+          break;
+
+        default:
+          navigate("/login");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Login Failed");
     }
@@ -99,11 +115,30 @@ function Login() {
             background: "#22c55e",
             color: "#fff",
             border: "none",
-            cursor: "pointer",
             borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "bold",
           }}
         >
           Login
+        </button>
+
+        <br />
+        <br />
+
+        <button
+          style={{
+            width: "100%",
+            padding: "10px",
+            background: "transparent",
+            color: "#22c55e",
+            border: "1px solid #22c55e",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Forgot Password
         </button>
       </div>
     </div>

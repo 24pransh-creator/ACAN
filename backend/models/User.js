@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
 
     password: {
@@ -20,9 +21,33 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    employeeId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
+    mobile: {
+      type: String,
+    },
+
+    trainNumber: {
+      type: String,
+    },
+
+    zoneDivision: {
+      type: String,
+    },
+
     role: {
       type: String,
-      enum: ["superadmin", "railway", "forest", "viewer"],
+      enum: [
+        "superadmin",
+        "railway",
+        "forest",
+        "viewer",
+        "train_driver"
+      ],
       default: "viewer",
     },
 
